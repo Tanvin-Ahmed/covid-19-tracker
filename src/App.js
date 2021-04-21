@@ -52,7 +52,7 @@ function App() {
     await fetch(url)
       .then(res => res.json())
       .then(data => {
-        setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+        setMapCenter(countryCode === 'worldwide' ? [34.80746, -40.4796] : [data.countryInfo.lat, data.countryInfo.long]);
         setCountry(countryCode);
         setCountryInfo(data);
         setMapZoom(6);
