@@ -15,7 +15,7 @@ const InfoBox = ({ countryInfo, casesType, setCasesType }) => {
                     <h2 style={{color: 'orangered'}} className="infoBox__cases">{prettyPrintStat(countryInfo.todayCases)}</h2>
 
                     <Typography className="infoBox__total" color="textSecondary">
-                        Total: {countryInfo.cases}
+                        Total: {countryInfo.cases ? countryInfo.cases :<p style={{fontSize: '16px'}}>Report not published</p>}
                     </Typography>
                 </CardContent>
             </Card>
@@ -28,7 +28,7 @@ const InfoBox = ({ countryInfo, casesType, setCasesType }) => {
                     <h2 style={{color: 'lime'}} className="infoBox__cases">{prettyPrintStat(countryInfo.todayRecovered)}</h2>
 
                     <Typography className="infoBox__total" color="textSecondary">
-                    Total: {countryInfo.recovered}
+                    Total: {countryInfo.recovered ? countryInfo.recovered : <p style={{fontSize: '16px'}}>Report not published</p>}
                     </Typography>
                 </CardContent>
             </Card>
@@ -41,7 +41,7 @@ const InfoBox = ({ countryInfo, casesType, setCasesType }) => {
                     <h2 className="infoBox__cases">{prettyPrintStat(countryInfo.todayDeaths)}</h2>
 
                     <Typography className="infoBox__total" color="textSecondary">
-                    Total: {countryInfo.deaths}
+                    Total: {countryInfo.deaths ? countryInfo.deaths : <p style={{fontSize: '16px'}}>Report not published</p>}
                     </Typography>
                 </CardContent>
             </Card>

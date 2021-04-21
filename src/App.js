@@ -8,7 +8,6 @@ import { sortData } from './util';
 import LineGraph from './components/LineGraph/LineGraph';
 import 'leaflet/dist/leaflet.css';
 import logo from './img/SARS-CoV-2_without_background-min.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -63,41 +62,47 @@ function App() {
 
 
   return (
-    <div className="app">
-      <div style={{ flex: 0.9 }} className="app_left">
-        <div className="app__header">
-          <div className="app__headerLeft">
-          <img className="logo" src={logo} alt=""/>
-          <h1 className="app__headline" style={{color: 'red'}}>COVID-19 TRACKER</h1>
+    <div className="covid__tracker">
+      <div className="app">
+        <div style={{ flex: 0.9 }} className="app_left">
+          <div className="app__header">
+            <div className="app__headerLeft">
+              <img className="logo" src={logo} alt="" />
+              <h1 className="app__headline" style={{ color: 'red' }}>COVID-19 TRACKER</h1>
+            </div>
+            <FormControl className="app__dropdown">
+              <Select
+                variant="outlined"
+                value={country}
+                onChange={onCountryChange}
+              >
+                <MenuItem value="worldwide">Worldwide</MenuItem>
+                {
+                  countries.map(country => <MenuItem value={country.value}>{country.name}</MenuItem>)
+                }
+              </Select>
+            </FormControl>
           </div>
-          <FormControl className="app__dropdown">
-            <Select
-              variant="outlined"
-              value={country}
-              onChange={onCountryChange}
-            >
-              <MenuItem value="worldwide">Worldwide</MenuItem>
-              {
-                countries.map(country => <MenuItem value={country.value}>{country.name}</MenuItem>)
-              }
-            </Select>
-          </FormControl>
+          <div>
+            <InfoBox key={countryInfo?.countryInfo?._id} countryInfo={countryInfo} casesType={casesType} setCasesType={setCasesType} />
+          </div>
+          <div style={{marginTop:'1rem', textAlign:'center', color:'gray'}} className="notice"><h3>Everyday report publish at 6:30PM-7:30PM</h3></div>
+          <COVIDMap casesType={casesType} countries={mapCountries} center={mapCenter} zoom={mapZoom} />
         </div>
-        <div>
-          <InfoBox key={countryInfo?.countryInfo?._id} countryInfo={countryInfo} casesType={casesType} setCasesType={setCasesType} />
-        </div>
-        <COVIDMap casesType={casesType} countries={mapCountries} center={mapCenter} zoom={mapZoom} />
+        <Card className="app__right">
+          <CardContent>
+            <h3>Live Cases by Country</h3>
+            <br />
+            <Table countries={tableData} />
+            <div className="app__graph">
+              <LineGraph country={country} casesType={casesType} />
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      <Card className="app__right">
-        <CardContent>
-          <h3>Live Cases by Country</h3>
-          <br />
-          <Table countries={tableData} />
-          <div className="app__graph">
-            <LineGraph country={country} casesType={casesType} />
-          </div>
-        </CardContent>
-      </Card>
+      <footer style={{textAlign: 'center', margin: '1.5rem 0'}}>
+        <h5>&copy; by <span style={{color: 'orangered'}}>Tanvin Ahmed</span> {new Date().getFullYear()}. All rights reserved.</h5>
+      </footer>
     </div>
   );
 }
