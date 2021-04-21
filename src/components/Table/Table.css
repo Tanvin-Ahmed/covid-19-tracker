@@ -14,3 +14,7 @@
 .table td {
     padding: 0.5rem;
 }
+.table tr {
+    display: flex;
+    justify-content: space-between;
+}

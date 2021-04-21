@@ -1,17 +1,25 @@
 import { Card, CardContent, FormControl, MenuItem, Select } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 import './App.css';
+import COVIDMap from './components/COVIDMap/COVINMap';
 import InfoBox from './components/InfoBox/InfoBox';
-import LineGraph from './components/LineGraph/LineGraph';
-import Map from './components/Map/Map';
 import Table from './components/Table/Table';
 import { sortData } from './util';
+import LineGraph from './components/LineGraph/LineGraph';
+import 'leaflet/dist/leaflet.css';
+import logo from './img/SARS-CoV-2_without_background-min.png';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState('worldwide');
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
+  const [mapCenter, setMapCenter] = useState([34.80746, -40.4796]);
+  const [mapZoom, setMapZoom] = useState(3);
+  const [mapCountries, setMapCountries] = useState([]);
+  const [casesType, setCasesType] = useState('cases');
+
 
   useEffect(async () => {
     await fetch("https://disease.sh/v3/covid-19/countries")
@@ -21,6 +29,7 @@ function App() {
           name: country.country,
           value: country.countryInfo.iso2
         }));
+        setMapCountries(data);
         const sortedData = sortData(data);
         setCountries(countries);
         setTableData(sortedData);
@@ -44,8 +53,10 @@ function App() {
     await fetch(url)
       .then(res => res.json())
       .then(data => {
+        setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
         setCountry(countryCode);
         setCountryInfo(data);
+        setMapZoom(6);
       })
       .catch(err => console.log(err));
   }
@@ -55,7 +66,10 @@ function App() {
     <div className="app">
       <div style={{ flex: 0.9 }} className="app_left">
         <div className="app__header">
-          <h1>COVID-19 TRACKER</h1>
+          <div className="app__headerLeft">
+          <img className="logo" src={logo} alt=""/>
+          <h1 className="app__headline" style={{color: 'red'}}>COVID-19 TRACKER</h1>
+          </div>
           <FormControl className="app__dropdown">
             <Select
               variant="outlined"
@@ -70,16 +84,18 @@ function App() {
           </FormControl>
         </div>
         <div>
-          <InfoBox key={countryInfo?.countryInfo?._id} countryInfo={countryInfo} />
+          <InfoBox key={countryInfo?.countryInfo?._id} countryInfo={countryInfo} casesType={casesType} setCasesType={setCasesType} />
         </div>
-        <Map />
+        <COVIDMap casesType={casesType} countries={mapCountries} center={mapCenter} zoom={mapZoom} />
       </div>
       <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country</h3>
-          <br/>
+          <br />
           <Table countries={tableData} />
-          <LineGraph />
+          <div className="app__graph">
+            <LineGraph country={country} casesType={casesType} />
+          </div>
         </CardContent>
       </Card>
     </div>

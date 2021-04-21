@@ -1,0 +1,12 @@
+.graph--headline {
+    margin-bottom: 0.5rem;
+}
+.cases--headline{
+    color: #FF9900;
+}
+.recovered--headline{
+    color: #62FE00;
+}
+.deaths--headline{
+    color: #FF0000;
+}
